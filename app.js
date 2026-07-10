@@ -59,9 +59,9 @@ const rewards = {
 };
 
 const hangmanWords = {
-  easy: ["video", "like", "canale", "camera", "studio", "gioco", "vlog", "audio"],
-  medium: ["thumbnail", "montaggio", "diretta", "iscritti", "algoritmo", "playlist", "commento", "microfono"],
-  hard: ["collaborazione", "sponsorizzato", "monetizzazione", "registrazione", "pubblicazione", "intrattenimento", "programmazione"]
+  easy: ["casa", "sole", "mare", "pane", "scuola", "amico", "gioco", "fiore"],
+  medium: ["telefono", "finestra", "montaggio", "iscritti", "algoritmo", "commento", "microfono", "scrivania"],
+  hard: ["collaborazione", "sponsorizzato", "monetizzazione", "registrazione", "pubblicazione", "intrattenimento", "programmazione", "condivisione"]
 };
 
 const shopItems = [
@@ -114,6 +114,7 @@ const state = {
     word: "",
     guessed: new Set(),
     wrong: new Set(),
+    usedWords: new Set(),
     maxWrong: 7,
     over: false
   }
@@ -358,7 +359,8 @@ function createSavePayload() {
     inventory: [...state.inventory],
     studioPositions: { ...state.studioPositions },
     mode: { ...state.mode },
-    difficulty: { ...state.difficulty }
+    difficulty: { ...state.difficulty },
+    hangmanUsedWords: [...state.hangman.usedWords]
   };
 }
 
@@ -390,6 +392,7 @@ function applySavePayload(save) {
   state.likes = sanitizeStat(save.likes);
   state.inventory = new Set(sanitizeInventory(save.inventory));
   state.studioPositions = sanitizeStudioPositions(save.studioPositions);
+  state.hangman.usedWords = new Set(sanitizeHangmanUsedWords(save.hangmanUsedWords));
   state.difficulty = {
     ttt: rewards.ttt[save.difficulty?.ttt] ? save.difficulty.ttt : "easy",
     c4: rewards.c4[save.difficulty?.c4] ? save.difficulty.c4 : "easy",
@@ -460,6 +463,14 @@ function sanitizeInventory(inventory) {
   return inventory.filter((id) => validItemIds.has(id));
 }
 
+function sanitizeHangmanUsedWords(words) {
+  if (!Array.isArray(words)) return [];
+  const validWords = new Set(Object.values(hangmanWords).flat().map((word) => word.toUpperCase()));
+  return words
+    .map((word) => String(word ?? "").toUpperCase())
+    .filter((word) => validWords.has(word));
+}
+
 function sanitizeStudioPositions(positions) {
   if (!positions || typeof positions !== "object" || Array.isArray(positions)) return {};
   return movableGearIds.reduce((validPositions, id) => {
@@ -490,6 +501,7 @@ function resetProgress() {
   state.likes = 0;
   state.inventory = new Set();
   state.studioPositions = {};
+  state.hangman.usedWords = new Set();
   state.difficulty = { ttt: "easy", c4: "easy", hangman: "easy" };
   state.mode = { ttt: "cpu", c4: "cpu" };
   $("#game-screen").classList.remove("active");
@@ -1160,14 +1172,26 @@ function finishConnectFourIfNeeded(symbol) {
 
 function resetHangman() {
   const difficulty = state.difficulty.hangman;
-  const words = hangmanWords[difficulty] ?? hangmanWords.easy;
-  state.hangman.word = randomFrom(words).toUpperCase();
+  state.hangman.word = chooseHangmanWord(difficulty);
   state.hangman.guessed = new Set();
   state.hangman.wrong = new Set();
   state.hangman.maxWrong = difficulty === "hard" ? 5 : difficulty === "medium" ? 6 : 7;
   state.hangman.over = false;
   $("#hangman-message").textContent = `Scegli una lettera. Vittoria: ${rewards.hangman[difficulty].money} soldi.`;
   renderHangman();
+  saveGame();
+}
+
+function chooseHangmanWord(difficulty) {
+  const words = (hangmanWords[difficulty] ?? hangmanWords.easy).map((word) => word.toUpperCase());
+  let available = words.filter((word) => !state.hangman.usedWords.has(word));
+  if (!available.length) {
+    words.forEach((word) => state.hangman.usedWords.delete(word));
+    available = words;
+  }
+  const word = randomFrom(available);
+  state.hangman.usedWords.add(word);
+  return word;
 }
 
 function renderHangman() {
