@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Creator Quest</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app">
+      <section id="character-screen" class="screen active">
+        <div class="intro">
+          <p class="eyebrow">Creator Quest</p>
+          <h1>Scegli il tuo futuro youtuber</h1>
+          <p class="lead">Ogni personaggio parte da zero: vinci mini-giochi, guadagna soldi e compra equipaggiamento per migliorare il canale.</p>
+        </div>
+        <div id="character-grid" class="character-grid" aria-label="Selezione personaggio"></div>
+      </section>
+
+      <section id="game-screen" class="screen">
+        <header class="topbar">
+          <div class="profile">
+            <div id="selected-avatar" class="avatar small"></div>
+            <div>
+              <p id="creator-name" class="creator-name">Creator</p>
+              <p id="channel-status" class="muted">Canale appena creato</p>
+            </div>
+          </div>
+          <div class="save-controls" aria-label="Salvataggi">
+            <label for="save-slot">Slot</label>
+            <select id="save-slot">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+            <button id="manual-save" class="secondary compact">Salva</button>
+            <button id="manual-load" class="secondary compact">Carica</button>
+            <span id="save-status" class="save-status" role="status" aria-live="polite"></span>
+          </div>
+          <div class="stats" aria-label="Statistiche">
+            <div>
+              <span>Soldi</span>
+              <strong id="money-value">0</strong>
+            </div>
+            <div>
+              <span>Follower</span>
+              <strong id="followers-value">0</strong>
+            </div>
+            <div>
+              <span>Iscritti</span>
+              <strong id="subscribers-value">0</strong>
+            </div>
+            <div>
+              <span>Mi piace</span>
+              <strong id="likes-value">0</strong>
+            </div>
+            <div>
+              <span>Setup</span>
+              <strong id="setup-value">Base</strong>
+            </div>
+            <button id="reset-progress" class="icon-action" title="Ricomincia da zero" aria-label="Ricomincia da zero">↺</button>
+          </div>
+        </header>
+
+        <nav class="tabs" aria-label="Sezioni gioco">
+          <button class="tab active" data-view="dashboard">Studio</button>
+          <button class="tab" data-view="shop">Negozio</button>
+        </nav>
+
+        <section id="dashboard" class="view active">
+          <div class="studio-layout">
+            <div class="studio">
+              <div class="studio-wall">
+                <div class="poster"></div>
+                <div class="shelf">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <div class="window"></div>
+              </div>
+              <div id="studio-avatar" class="avatar large"></div>
+              <div id="gear-chair" class="chair"></div>
+              <div id="gear-headphones" class="headphones"></div>
+              <div id="gear-greenscreen" class="greenscreen"></div>
+              <div id="gear-studio" class="studio-upgrade"></div>
+              <div id="gear-assistant" class="assistant-figure"></div>
+              <div class="desk">
+                <div class="keyboard"></div>
+                <div class="mouse"></div>
+                <button id="gear-monitor" class="monitor computer-button" type="button" aria-label="Apri computer"></button>
+                <div id="gear-camera" class="camera"></div>
+                <div id="gear-mic" class="mic"></div>
+                <div id="gear-light" class="light"></div>
+                <div id="gear-editing" class="editing"></div>
+                <div id="gear-thumbnail" class="thumbnail-pack"></div>
+                <div id="gear-streamdeck" class="streamdeck"></div>
+                <div id="gear-capture" class="capture-card"></div>
+                <div id="gear-sponsor" class="sponsor-kit"></div>
+              </div>
+            </div>
+            <div class="panel">
+              <h2>Il tuo canale</h2>
+              <p id="progress-text">Vinci una partita a Tris o Forza 4 per pubblicare i primi video e guadagnare soldi.</p>
+              <div id="inventory-list" class="inventory"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="shop" class="view">
+          <div class="game-header">
+            <div>
+              <h2>Negozio</h2>
+              <p class="muted">Compra equipaggiamento per far crescere il canale più velocemente.</p>
+            </div>
+          </div>
+          <div id="shop-list" class="shop-list"></div>
+        </section>
+
+        <div id="computer-window" class="computer-overlay" aria-hidden="true">
+          <div class="computer-modal" role="dialog" aria-modal="true" aria-labelledby="computer-title">
+            <header class="computer-titlebar">
+              <h2 id="computer-title">Computer</h2>
+              <button id="close-computer" class="icon-action" type="button" aria-label="Chiudi computer">×</button>
+            </header>
+            <div class="computer-tabs" aria-label="Mini giochi">
+              <button class="computer-tab active" data-game-panel="tic-tac-toe">Tris</button>
+              <button class="computer-tab" data-game-panel="connect-four">Forza 4</button>
+              <button class="computer-tab" data-game-panel="hangman">Impiccato</button>
+            </div>
+
+            <section id="tic-tac-toe" class="game-panel active">
+              <div class="game-header">
+                <div>
+                  <h2>Tris</h2>
+                  <p class="muted">Scegli la difficolta': più rischi, più guadagni.</p>
+                </div>
+                <button id="reset-ttt" class="secondary">Nuova partita</button>
+              </div>
+              <div class="difficulty" data-game="ttt" aria-label="Difficolta tris">
+                <button class="difficulty-button active" data-difficulty="easy">Facile <strong>10</strong></button>
+                <button class="difficulty-button" data-difficulty="medium">Medio <strong>18</strong></button>
+                <button class="difficulty-button" data-difficulty="hard">Difficile <strong>30</strong></button>
+              </div>
+              <div class="mode-switch" data-game="ttt" aria-label="Modalita tris">
+                <button class="mode-button active" data-mode="cpu">CPU</button>
+                <button class="mode-button" data-mode="local">2 giocatori</button>
+              </div>
+              <p id="ttt-message" class="message">Tocca una casella per iniziare.</p>
+              <div id="ttt-board" class="ttt-board" aria-label="Tabellone tris"></div>
+            </section>
+
+            <section id="connect-four" class="game-panel">
+              <div class="game-header">
+                <div>
+                  <h2>Forza 4</h2>
+                  <p class="muted">Allinea 4 gettoni prima della CPU. Le ricompense scalano con la difficolta'.</p>
+                </div>
+                <button id="reset-c4" class="secondary">Nuova partita</button>
+              </div>
+              <div class="difficulty" data-game="c4" aria-label="Difficolta forza 4">
+                <button class="difficulty-button active" data-difficulty="easy">Facile <strong>18</strong></button>
+                <button class="difficulty-button" data-difficulty="medium">Medio <strong>30</strong></button>
+                <button class="difficulty-button" data-difficulty="hard">Difficile <strong>45</strong></button>
+              </div>
+              <div class="mode-switch" data-game="c4" aria-label="Modalita forza 4">
+                <button class="mode-button active" data-mode="cpu">CPU</button>
+                <button class="mode-button" data-mode="local">2 giocatori</button>
+              </div>
+              <p id="c4-message" class="message">Scegli una colonna.</p>
+              <div id="c4-board" class="c4-board" aria-label="Tabellone forza 4"></div>
+            </section>
+
+            <section id="hangman" class="game-panel">
+              <div class="game-header">
+                <div>
+                  <h2>Impiccato</h2>
+                  <p class="muted">Indovina la parola prima di finire i tentativi.</p>
+                </div>
+                <button id="reset-hangman" class="secondary">Nuova parola</button>
+              </div>
+              <div class="difficulty" data-game="hangman" aria-label="Difficolta impiccato">
+                <button class="difficulty-button active" data-difficulty="easy">Facile <strong>14</strong></button>
+                <button class="difficulty-button" data-difficulty="medium">Medio <strong>24</strong></button>
+                <button class="difficulty-button" data-difficulty="hard">Difficile <strong>38</strong></button>
+              </div>
+              <p id="hangman-message" class="message">Scegli una lettera.</p>
+              <div class="hangman-layout">
+                <div class="hangman-drawing" aria-hidden="true">
+                  <span class="gallows"></span>
+                  <span class="head"></span>
+                  <span class="body"></span>
+                  <span class="arm left"></span>
+                  <span class="arm right"></span>
+                  <span class="leg left"></span>
+                  <span class="leg right"></span>
+                </div>
+                <div>
+                  <div id="hangman-word" class="hangman-word" aria-label="Parola da indovinare"></div>
+                  <p id="hangman-errors" class="hangman-errors">Errori rimasti: 7</p>
+                  <div id="hangman-letters" class="hangman-letters" aria-label="Lettere impiccato"></div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
